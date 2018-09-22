@@ -66,3 +66,7 @@ DistributedTask/**/StyleCop.Cache
 
 # Ignore git merge conflict files
 *.orig
+**/obj/
+**/bin/
+**/d|Debug/
+**/r|Release/
