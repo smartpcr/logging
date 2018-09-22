@@ -1,0 +1,89 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "C:\\work\\github\\metrics\\appmetric\\appmetric.csproj",
+    "projectName": "appmetric",
+    "projectPath": "C:\\work\\github\\metrics\\appmetric\\appmetric.csproj",
+    "outputPath": "C:\\work\\github\\metrics\\appmetric\\obj\\",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "netcoreapp2.1"
+    ],
+    "frameworks": {
+      "netcoreapp2.1": {
+        "projectReferences": {}
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "netcoreapp2.1": {
+      "dependencies": {
+        "App.Metrics": {
+          "target": "Package",
+          "version": "[2.1.0, )"
+        },
+        "App.Metrics.AspNetCore.Core": {
+          "target": "Package",
+          "version": "[2.0.0, )"
+        },
+        "App.Metrics.AspNetCore.Mvc": {
+          "target": "Package",
+          "version": "[2.0.0, )"
+        },
+        "App.Metrics.AspNetCore.Reporting": {
+          "target": "Package",
+          "version": "[2.0.0, )"
+        },
+        "App.Metrics.Reporting.InfluxDB": {
+          "target": "Package",
+          "version": "[2.0.0, )"
+        },
+        "Microsoft.AspNetCore.App": {
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.1.1, )",
+          "autoReferenced": true
+        },
+        "Microsoft.NETCore.App": {
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.1.0, )",
+          "autoReferenced": true
+        },
+        "Serilog": {
+          "target": "Package",
+          "version": "[2.7.1, )"
+        },
+        "Serilog.AspNetCore": {
+          "target": "Package",
+          "version": "[2.1.1, )"
+        },
+        "Serilog.Settings.Configuration": {
+          "target": "Package",
+          "version": "[2.6.1, )"
+        },
+        "Serilog.Sinks.Console": {
+          "target": "Package",
+          "version": "[3.1.1, )"
+        },
+        "Serilog.Sinks.Fluentd": {
+          "target": "Package",
+          "version": "[0.2.2, )"
+        }
+      },
+      "imports": [
+        "net461"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}
