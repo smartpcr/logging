@@ -70,3 +70,5 @@ DistributedTask/**/StyleCop.Cache
 **/bin/
 **/d|Debug/
 **/r|Release/
+**/.idea/
+
