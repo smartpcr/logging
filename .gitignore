@@ -31,7 +31,6 @@ msbuild.read.*.tlog
 *.vpwhist
 *.vtg
 
-*.sln
 *.zip
 
 # Sass cache files
