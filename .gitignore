@@ -70,4 +70,4 @@ DistributedTask/**/StyleCop.Cache
 **/d|Debug/
 **/r|Release/
 **/.idea/
-
+**/out/
