@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "appmetric", "appmetric\appmetric.csproj", "{D3F6FD34-D90F-4273-9ED9-CBB966EA0F28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "appmetric", "web\appmetric.csproj", "{D3F6FD34-D90F-4273-9ED9-CBB966EA0F28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

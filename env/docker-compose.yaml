@@ -38,3 +38,17 @@ services:
       - "elasticsearch"
     ports:
       - "5601:5601"
+
+  influxdb:
+    image: influxdb
+    volumes:
+      - ./influxdb:/var/lib/influxdb:rw
+    ports:
+      - "8086:8086"
+
+  grafana:
+    image: grafana/grafana
+    links: 
+      - "influxdb"
+    ports:
+      - "3000:3000"
