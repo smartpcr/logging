@@ -1,6 +1,6 @@
 using System;
 
-namespace appmetric.Models
+namespace Web.Models
 {
     public class ErrorViewModel
     {

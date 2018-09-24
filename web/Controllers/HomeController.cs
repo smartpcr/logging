@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using appmetric.Models;
+using Web.Models;
 using App.Metrics;
 using App.Metrics.Counter;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 
-namespace appmetric.Controllers
+namespace Web.Controllers
 {
     public class HomeController : Controller
     {

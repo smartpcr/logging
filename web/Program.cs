@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Serilog.Sinks.Fluentd;
 
-namespace appmetric
+namespace Web
 {
     public class Program
     {

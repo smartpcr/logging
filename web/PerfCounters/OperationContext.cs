@@ -1,6 +1,6 @@
 using System;
 
-namespace appmetric.Controllers
+namespace Web.PerfCounters
 {
     public class OperationContext
     {
