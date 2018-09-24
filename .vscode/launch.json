@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/appmetric/bin/Debug/netcoreapp2.1/appmetric.dll",
+            "program": "${workspaceFolder}/Web/bin/Debug/netcoreapp2.1/Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/appmetric",
+            "cwd": "${workspaceFolder}/Web",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {

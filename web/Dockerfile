@@ -26,4 +26,4 @@ RUN dotnet restore ./
 COPY . ./
 RUN dotnet publish -o ./out
 
-CMD ["dotnet", "./out/appmetric.dll"]
+CMD ["dotnet", "./out/Web.dll"]
