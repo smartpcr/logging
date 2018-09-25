@@ -39,7 +39,8 @@ namespace Web
                     options.InfluxDb.BaseUri = new Uri("http://localhost:8086"); // TODO: read from appSettings
                     options.InfluxDb.Database = "appmetric";
                     options.InfluxDb.CreateDataBaseIfNotExists = true;
-                }).Build();
+                })
+                .Build();
             services.AddMetrics(metrics);
             services.AddMetricsTrackingMiddleware();
             services.AddMetricsReportScheduler();
