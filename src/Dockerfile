@@ -19,11 +19,12 @@ RUN curl -SL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-lin
 
 # Minimal file copies for package restore
 WORKDIR /app
-COPY ./*.csproj ./
-RUN dotnet restore ./
+COPY . ./
+RUN dotnet restore ./App.Metrics.Reporting.Socket/
+RUN dotnet restore ./web/
 
 # Full file copy for build
-COPY . ./
-RUN dotnet publish -o ./out
+
+RUN dotnet publish ./web -o ../out
 
 CMD ["dotnet", "./out/Web.dll"]

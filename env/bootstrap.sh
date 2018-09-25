@@ -27,6 +27,10 @@ New-Item -Path c:\fluentd -ItemType Directory | Out-Null
 docker run -d --name fluentd --net=influxdb -p 24224:24224 -p 24224:24224/udp \
       -v c:\fluentd:/fluentd/log:rw fluent/fluentd
 
+echo "build web..."
+
+docker run -d --name web -p 8000:80 --net=influxdb web
+
 echo "run EFK stack..."
 docker-compose up 
 
