@@ -34,3 +34,10 @@ if ($danglingImages) {
     Write-Host "remove all dangling images..."
     Invoke-Expression "docker rmi -f $(docker images -qf dangling=true)"
 }
+
+# remove volume
+docker volume rm $(docker volume ls -qf dangling=true)
+docker volume ls -qf dangling=true | xargs -r docker volume rm
+
+# remove network
+docker network rm $(docker network ls | grep "bridge" | awk '/ / { print $1 }')
