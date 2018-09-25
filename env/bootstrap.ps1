@@ -17,9 +17,11 @@ Write-Host "run telegraf..."
 Remove-Item -Recurse -Force c:\telegraf -ErrorAction SilentlyContinue
 New-Item -Path c:\telegraf -ItemType Directory | Out-Null
 Copy-Item -Path $envFolder\telegraf.conf -Destination C:\telegraf\telegraf.conf 
-docker run -d --name telegraf --net=influxdb -v C:\telegraf\telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf 
+docker run -d --name telegraf --net=influxdb `
+    -v C:\telegraf\telegraf.conf:/etc/telegraf/telegraf.conf:ro `
+    telegraf 
 
-docker run -d --name chronograf -p 8888:8888 --net=influxdb chronograf --influxdb-url=http://localhost:8086
+docker run -d --name chronograf -p 8888:8888 --net=influxdb chronograf --influxdb-url=http://influxdb:8086
 
 docker run -d --name=grafana -p 3000:3000 --net=influxdb grafana/grafana
 

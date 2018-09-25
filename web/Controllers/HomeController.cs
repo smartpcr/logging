@@ -81,7 +81,7 @@ namespace Web.Controllers
             {
                 ControllerName = "Home",
                 Timestamp = DateTime.UtcNow,
-                ClientAddress = HttpContext.Connection.RemoteIpAddress
+                ClientAddress = HttpContext.Connection.RemoteIpAddress.ToString()
             };
             _logger.LogInformation("Increment was hit with {@info}", info);
             return Ok("done");
