@@ -1,24 +1,31 @@
 
-echo "run influxdb..."
-sudo rm -rf /var/lib/influxdb
-sudo mkdir -p /var/lib/influxdb
-sudo cp ./influxdb.conf /var/lib/influxdb 
-# docker run -d --name influxdb -p 8086:8086 -v /var/lib/influxdb:/var/lib/influxdb:rw influxdb
-docker run -d --name influxdb 8086:8086 \
-      -v /var/lib/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro \
-      -v /var/lib/influxdb:/var/lib/influxdb:rw \
+echo "deploy influxdb..."
+sudo rm -rf /tmp/influxdb
+sudo mkdir -p /tmp/influxdb
+sudo cp ./influxdb.conf /tmp/influxdb 
+sudo chmod 777 /tmp/influxdb
+docker network create influxdb
+docker run -d --name influxdb --net=influxdb -p 8086:8086 \
+      -v /tmp/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro \
+      -v /tmp/influxdb:/var/lib/influxdb:rw \
       influxdb -config /etc/influxdb/influxdb.conf
 
-echo "run telegraf..."
-sudo rm -rf /var/lib/telegraf
-sudo mkdir -p /var/lib/telegraf
-sudo cp ./telegraf.conf /var/lib/telegraf 
-docker run -d --name=telegraf -v /var/lib/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf 
+echo "deploy telegraf..."
+sudo rm -rf /tmp/telegraf
+sudo mkdir -p /tmp/telegraf
+sudo chmod 777 /tmp/telegraf
+sudo cp ./telegraf.conf /tmp/telegraf 
+docker run -d --name=telegraf --net=influxdb \
+      -v /tmp/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf 
 
 
-echo "run grafana..."
-docker run -d --name=grafana -p 3000:3000 grafana/grafana
+echo "deploy grafana..."
+docker run -d --name=grafana --net=influxdb -p 3000:3000 grafana/grafana
 
+echo "deploy fluentd..."
+New-Item -Path c:\fluentd -ItemType Directory | Out-Null
+docker run -d --name fluentd --net=influxdb -p 24224:24224 -p 24224:24224/udp \
+      -v c:\fluentd:/fluentd/log:rw fluent/fluentd
 
 echo "run EFK stack..."
 docker-compose up 
