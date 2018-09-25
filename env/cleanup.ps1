@@ -4,9 +4,9 @@ param(
 )
 
 Write-Host "Checking existing docker containers..."
-$containers = Invoke-Expression "docker ps -q"
+$containers = Invoke-Expression "docker ps -q -a"
 if ($containersToRemove -and $containersToRemove.Length -gt 0) {
-    $containers = Invoke-Expression "docker ps -q --filter `"$containersToRemove`""
+    $containers = Invoke-Expression "docker ps -a -q --filter `"$containersToRemove`""
 }
 if ($containers) {
     $containers | ForEach-Object {
