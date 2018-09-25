@@ -27,6 +27,8 @@ if ($images) {
         Invoke-Expression "docker rmi -f $imageId"
     }
 }
+
+
 $danglingImages = Invoke-Expression "docker images -qf dangling=true"
 if ($danglingImages) {
     Write-Host "remove all dangling images..."

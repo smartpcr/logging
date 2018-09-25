@@ -19,13 +19,13 @@ services:
     build: ./fluentd
     volumes:
       - ./fluentd/conf:/fluentd/etc
-    links:
-      - "elasticsearch"
+    /* links:
+      - "elasticsearch" */
     ports:
       - "24224:24224"
       - "24224:24224/udp"
 
-  elasticsearch:
+  /* elasticsearch:
     image: elasticsearch
     expose:
       - 9200
@@ -37,7 +37,7 @@ services:
     links:
       - "elasticsearch"
     ports:
-      - "5601:5601"
+      - "5601:5601" */
 
   influxdb:
     image: influxdb
