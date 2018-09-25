@@ -18,4 +18,8 @@
     <PackageReference Include="Serilog.Sinks.Fluentd" Version="0.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\App.Metrics.Reporting.Socket\App.Metrics.Reporting.Socket.csproj" />
+  </ItemGroup>
+
 </Project>

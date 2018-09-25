@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using App.Metrics;
+using App.Metrics.Reporting.Socket;
+using App.Metrics.Reporting.Socket.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -25,20 +28,20 @@ namespace Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //  var metrics = AppMetrics.CreateDefaultBuilder()
-            //     .Report.ToInfluxDb(options =>
-            //     {
-            //         options.InfluxDb.BaseUri = new Uri("http://localhost:8086"); // TODO: read from appSettings
-            //         options.InfluxDb.Database = "nodemetric";
-            //         options.InfluxDb.CreateDataBaseIfNotExists = true;
-            //     }).Build();
-
             var metrics = AppMetrics.CreateDefaultBuilder()
                 .Report.ToInfluxDb(options =>
                 {
                     options.InfluxDb.BaseUri = new Uri("http://localhost:8086"); // TODO: read from appSettings
                     options.InfluxDb.Database = "appmetric";
                     options.InfluxDb.CreateDataBaseIfNotExists = true;
+                })
+                .Report.OverUds(new MetricsReportingSocketOptions()
+                {
+                    SocketSettings = new SocketSettings()
+                    {
+                        ProtocolType = ProtocolType.IP,
+                        Address = "//tmp/telegraf.sock"
+                    }
                 })
                 .Build();
             services.AddMetrics(metrics);
