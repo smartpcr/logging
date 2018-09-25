@@ -1,12 +1,22 @@
-Remove-Item -Recurse -Force C:\influxdb
-New-Item -Path c:\influxdb -ItemType Directory | Out-Null
-docker network create influxdb
-docker run -d --name influxdb -p 8083:8083 --net=influxdb -v c:\influxdb:/var/lib/influxdb:rw influxdb
+$envFolder = $PSScriptRoot
+if (!$envFolder) {
+    $envFolder = Get-Location
+}
 
-Remove-Item -Recurse -Force c:\telegraf 
+Write-Host "Deploy influxdb..."
+Remove-Item -Recurse -Force C:\influxdb -ErrorAction SilentlyContinue
+New-Item -Path c:\influxdb -ItemType Directory | Out-Null
+Copy-Item $envFolder\influxdb.conf -Destination c:\influxdb 
+docker run -d --name influxdb -p 8086:8086 `
+    -v c:\influxdb\influxdb.conf:/etc/influxdb/influxdb.conf:ro `
+    -v c:\influxdb:/var/lib/influxdb:rw `
+    influxdb -config /etc/influxdb/influxdb.conf
+
+Write-Host "run telegraf..."
+Remove-Item -Recurse -Force c:\telegraf -ErrorAction SilentlyContinue
 New-Item -Path c:\telegraf -ItemType Directory | Out-Null
-Copy-Item -Path $PWD\telegraf.conf -Destination C:\telegraf\telegraf.conf 
-docker run -d --name telegraf --net=influxdb -v C:\telegraf\telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf 
+Copy-Item -Path $envFolder\telegraf.conf -Destination C:\telegraf\telegraf.conf 
+docker run -d --name telegraf -v C:\telegraf\telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf 
 
 docker run -d --name chronograf -p 8888:8888 --net=container:influxdb chronograf --influxdb-url=http://localhost:8086
 
