@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using App.Metrics;
+using App.Metrics.Formatters.InfluxDB;
 using App.Metrics.Reporting.Socket;
 using App.Metrics.Reporting.Socket.Client;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +38,9 @@ namespace Web
                     {
                         ProtocolType = ProtocolType.IP,
                         Address = "//tmp/telegraf.sock"
-                    }
+                    },
+                    MetricsOutputFormatter = new MetricsInfluxDbLineProtocolOutputFormatter(new MetricsInfluxDbLineProtocolOptions()),
+                    FlushInterval = TimeSpan.FromSeconds(30)
                 })
                 .Build();
             services.AddMetrics(metrics);
