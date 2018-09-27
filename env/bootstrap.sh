@@ -14,22 +14,36 @@ echo "deploy telegraf..."
 sudo rm -rf /tmp/telegraf
 sudo mkdir -p /tmp/telegraf
 sudo chmod 777 /tmp/telegraf
-sudo cp ./telegraf.conf /tmp/telegraf 
+sudo cp ./telegraf.conf /tmp/telegraf
+
+sudo rm -rf /var/run/telegraf
+sudo mkdir -p /var/run/telegraf 
+
 docker run -d --name=telegraf --net=influxdb \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v /var/run/telegraf:/var/run/telegraf \
       -v /tmp/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf 
 
 
 echo "deploy grafana..."
 docker run -d --name=grafana --net=influxdb -p 3000:3000 grafana/grafana
 
+# dashboard for node-metric: 4823
+# dashboard for app-metric: 2125
+
 echo "deploy fluentd..."
-New-Item -Path c:\fluentd -ItemType Directory | Out-Null
+sudo rm -rf /tmp/fluentd
+sudo mkdir -p /tmp/fluentd
+sudo chmod 777 /tmp/fluentd
 docker run -d --name fluentd --net=influxdb -p 24224:24224 -p 24224:24224/udp \
-      -v c:\fluentd:/fluentd/log:rw fluent/fluentd
+      -v /var/run/telegraf:/var/run/telegraf \
+      -v /tmp/fluentd:/fluentd/log:rw fluent/fluentd
 
 echo "build web..."
 
-docker run -d --name web -p 8000:80 --net=influxdb web
+docker run -d --name web -p 8000:80 --net=influxdb \
+      -v /var/run/telegraf:/var/run/telegraf \
+      web
 
 echo "run EFK stack..."
 docker-compose up 

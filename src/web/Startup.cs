@@ -28,7 +28,7 @@ namespace Web
             var metrics = AppMetrics.CreateDefaultBuilder()
                 .Report.ToInfluxDb(options =>
                 {
-                    options.InfluxDb.BaseUri = new Uri("http://localhost:8086"); // TODO: read from appSettings
+                    options.InfluxDb.BaseUri = new Uri("http://influxdb:8086"); // TODO: read from appSettings
                     options.InfluxDb.Database = "appmetric";
                     options.InfluxDb.CreateDataBaseIfNotExists = true;
                 })
@@ -37,7 +37,7 @@ namespace Web
                     SocketSettings = new SocketSettings()
                     {
                         ProtocolType = ProtocolType.IP,
-                        Address = "//tmp/telegraf.sock"
+                        Address = "//var/run/telegraf/telegraf.sock"
                     },
                     MetricsOutputFormatter = new MetricsInfluxDbLineProtocolOutputFormatter(new MetricsInfluxDbLineProtocolOptions()),
                     FlushInterval = TimeSpan.FromSeconds(30)
