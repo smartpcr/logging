@@ -18,6 +18,7 @@ sudo cp ./telegraf.conf /tmp/telegraf
 
 sudo rm -rf /var/run/telegraf
 sudo mkdir -p /var/run/telegraf 
+sudo chmod 777 /var/run/telegraf
 
 docker run -d --name=telegraf --net=influxdb \
       -v /var/run/docker.sock:/var/run/docker.sock \
@@ -42,7 +43,7 @@ docker run -d --name fluentd --net=influxdb -p 24224:24224 -p 24224:24224/udp \
 echo "build web..."
 
 docker run -d --name web -p 8000:80 --net=influxdb \
-      -v /var/run/telegraf:/var/run/telegraf \
+      -v /var/run/telegraf:/var/run/telegraf:rw \
       web
 
 echo "run EFK stack..."

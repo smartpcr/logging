@@ -37,7 +37,7 @@ namespace Web
                     SocketSettings = new SocketSettings()
                     {
                         ProtocolType = ProtocolType.IP,
-                        Address = "//var/run/telegraf/telegraf.sock"
+                        Address = "/var/run/telegraf/telegraf.sock"
                     },
                     MetricsOutputFormatter = new MetricsInfluxDbLineProtocolOutputFormatter(new MetricsInfluxDbLineProtocolOptions()),
                     FlushInterval = TimeSpan.FromSeconds(30)
