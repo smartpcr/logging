@@ -16,13 +16,13 @@ sudo mkdir -p /tmp/telegraf
 sudo chmod 777 /tmp/telegraf
 sudo cp ./telegraf.conf /tmp/telegraf
 
-sudo rm -rf /var/run/telegraf
-sudo mkdir -p /var/run/telegraf 
-sudo chmod 777 /var/run/telegraf
+# sudo rm -rf /var/run/telegraf
+# sudo mkdir -p /var/run/telegraf 
+# sudo chmod 777 /var/run/telegraf
 
-docker run -d --name=telegraf --net=influxdb \
+sudo docker run -d --name=telegraf --net=influxdb \
       -v /var/run/docker.sock:/var/run/docker.sock \
-      -v /var/run/telegraf:/var/run/telegraf \
+      -v /private/var/run/telegraf:/var/run/telegraf \
       -v /tmp/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf 
 
 
@@ -37,16 +37,16 @@ sudo rm -rf /tmp/fluentd
 sudo mkdir -p /tmp/fluentd
 sudo chmod 777 /tmp/fluentd
 docker run -d --name fluentd --net=influxdb -p 24224:24224 -p 24224:24224/udp \
-      -v /var/run/telegraf:/var/run/telegraf \
       -v /tmp/fluentd:/fluentd/log:rw fluent/fluentd
 
 echo "build web..."
 
 docker run -d --name web -p 8000:80 --net=influxdb \
-      -v /var/run/telegraf:/var/run/telegraf:rw \
+      -v /private/var/run/telegraf:/var/run/telegraf:rw \
       web
 
 echo "run EFK stack..."
+
 docker-compose up 
 
 dotnet build 

@@ -9,6 +9,9 @@ services:
       - "8000:80"
     links:
       - fluentd
+      - telegraf
+    ports:
+      - "8000:80"
     logging:
       driver: "fluentd"
       options:
@@ -19,13 +22,13 @@ services:
     build: ./fluentd
     volumes:
       - ./fluentd/conf:/fluentd/etc
-    /* links:
-      - "elasticsearch" */
+    links:
+      - elasticsearch
     ports:
       - "24224:24224"
       - "24224:24224/udp"
 
-  /* elasticsearch:
+  elasticsearch:
     image: elasticsearch
     expose:
       - 9200
@@ -37,7 +40,7 @@ services:
     links:
       - "elasticsearch"
     ports:
-      - "5601:5601" */
+      - "5601:5601"
 
   influxdb:
     image: influxdb
@@ -52,3 +55,5 @@ services:
       - "influxdb"
     ports:
       - "3000:3000"
+
+ 
