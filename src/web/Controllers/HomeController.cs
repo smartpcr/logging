@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 using App.Metrics;
@@ -15,6 +16,8 @@ namespace Web.Controllers
         private const string ACTIVITY_ID = "ActivityId";
         private readonly IMetrics _metrics;
         private readonly ILogger<HomeController> _logger;
+        private readonly RequestDurationForApdexTesting _durationForApdexTesting = 
+            new RequestDurationForApdexTesting(1.0);
 
         private readonly CounterOptions _counterOptions = new CounterOptions()
         {
@@ -70,6 +73,30 @@ namespace Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult PageNotFound()
+        {
+            return NotFound();
+        }
+
+        public IActionResult Fail()
+        {
+            throw new Exception("Error found");
+        }
+
+        public async Task<IActionResult> Wait()
+        {
+            var random = new Random();
+            await Task.Delay(TimeSpan.FromSeconds(random.Next(10)));
+            return Ok("long task");
+        }
+
+        public async Task<int> Abort()
+        {
+            var duration = _durationForApdexTesting.NextFrustratingDuration;
+            await Task.Delay(duration, HttpContext.RequestAborted);
+            return duration;
         }
 
         public IActionResult Increment(string tag = null)
