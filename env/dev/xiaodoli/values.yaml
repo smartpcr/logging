@@ -1,0 +1,18 @@
+# global 
+owner: xiaodoli
+envName: dev
+subscriptionName: Compliance_Tools_Eng
+subscriptionAlias: onees
+
+# acr
+acrOwnerEmail: xiaodoli@microsoft.com
+
+# aks
+aksDnsPrefix: hw-aks-xd
+
+# helm repo
+helmStorageAccountName: helm1es
+helmBlobContainerName: helm
+
+# description: not used in provision
+purpose: geneva

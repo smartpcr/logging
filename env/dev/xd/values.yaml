@@ -1,0 +1,18 @@
+# global 
+owner: xd
+envName: dev
+subscriptionName: RRD MSDN Ultimate
+subscriptionAlias: rrdult
+
+# acr
+acrOwnerEmail: xiaodoli@microsoft.com
+
+# aks
+aksDnsPrefix: hw-aks-xd
+
+# helm repo
+helmStorageAccountName: rrdhelm
+helmBlobContainerName: helm
+
+# description: not used in provision
+purpose: istio

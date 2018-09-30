@@ -1,0 +1,9 @@
+productName: helloworld
+productShortName: hw
+envName: dev
+owner: 1es
+location: westus2
+loc: wus2
+aksDnsPrefix: hw-aks
+email: 1es@microsoft.com
+adminUsername: azureuser
