@@ -1,3 +1,11 @@
+Write-Host "Get git root folder..."
+$currentLocation = Get-Location
+while (-not (Test-Path (Join-Path $currentLocation ".git") -PathType Container)) {
+    $currentLocation = Split-Path $currentLocation -Parent 
+}
+Write-Host "Git root folder found: '$currentLocation'"
+$GitRoot = $currentLocation
+
 $envFolder = $PSScriptRoot
 if (!$envFolder) {
     $envFolder = Get-Location
@@ -8,9 +16,10 @@ Remove-Item -Recurse -Force C:\influxdb -ErrorAction SilentlyContinue
 New-Item -Path c:\influxdb -ItemType Directory | Out-Null
 Copy-Item $envFolder\influxdb.conf -Destination c:\influxdb 
 docker network create influxdb
+docker volume create --driver local --name influxdb --opt o=size=200m --opt device=tmpfs --opt type=tmpfs 
 docker run -d --name influxdb --net=influxdb -p 8086:8086 `
     -v c:\influxdb\influxdb.conf:/etc/influxdb/influxdb.conf:ro `
-    -v c:\influxdb:/var/lib/influxdb:rw `
+    -v influxdb:/var/lib/influxdb:rw `
     influxdb -config /etc/influxdb/influxdb.conf
 
 Write-Host "Deploy telegraf..."
@@ -41,6 +50,7 @@ docker run -d --name fluentd -p 24224:24224 -p 24224:24224/udp -v c:\fluentd:/fl
 
 
 Write-Host "Deploy web on 8000..."
+docker build -t web "$GitRoot\src"
 docker run -d --name web -p 8000:80 --net=influxdb `
       -v /var/run/telegraf:/var/run/telegraf:rw `
       web
