@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk
+FROM microsoft/dotnet:2.2-sdk
 ENV NUGET_XMLDOC_MODE skip
 
 # Add support for remote debugging inside Docker

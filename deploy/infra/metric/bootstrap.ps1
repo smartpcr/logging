@@ -6,15 +6,10 @@ while (-not (Test-Path (Join-Path $currentLocation ".git") -PathType Container))
 Write-Host "Git root folder found: '$currentLocation'"
 $GitRoot = $currentLocation
 
-$envFolder = $PSScriptRoot
-if (!$envFolder) {
-    $envFolder = Get-Location
-}
-
 Write-Host "Deploy influxdb on 8086..."
 Remove-Item -Recurse -Force C:\influxdb -ErrorAction SilentlyContinue
 New-Item -Path c:\influxdb -ItemType Directory | Out-Null
-Copy-Item $envFolder\influxdb.conf -Destination c:\influxdb 
+Copy-Item $GitRoot\deploy\infra\metric\influxdb.conf -Destination c:\influxdb 
 docker network create influxdb
 docker volume create --driver local --name influxdb --opt o=size=200m --opt device=tmpfs --opt type=tmpfs 
 docker run -d --name influxdb --net=influxdb -p 8086:8086 `
@@ -25,7 +20,7 @@ docker run -d --name influxdb --net=influxdb -p 8086:8086 `
 Write-Host "Deploy telegraf..."
 Remove-Item -Recurse -Force c:\telegraf -ErrorAction SilentlyContinue
 New-Item -Path c:\telegraf -ItemType Directory | Out-Null
-Copy-Item -Path $envFolder\telegraf.conf -Destination C:\telegraf\telegraf.conf 
+Copy-Item -Path $GitRoot\deploy\infra\metric\telegraf.conf -Destination C:\telegraf\telegraf.conf 
 Remove-Item -Recurse -Force c:\run\telegraf -ErrorAction SilentlyContinue
 New-Item -Path c:\run\telegraf -ItemType Directory | Out-Null
 
@@ -54,3 +49,7 @@ docker build -t web "$GitRoot\src"
 docker run -d --name web -p 8000:80 --net=influxdb `
       -v /var/run/telegraf:/var/run/telegraf:rw `
       web
+
+$chromeExe = "'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+Write-Host "Openning grafana and set user/password (default to admin/admin)"
+start-process -FilePath $chromeExe -ArgumentList "http://localhost:3000"
