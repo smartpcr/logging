@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "src\web\Web.csproj",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Metrics.Reporting.Socket", "src\App.Metrics.Reporting.Socket\App.Metrics.Reporting.Socket.csproj", "{F3997A11-5350-4469-9523-EC23C6DAB8DB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{22D2302C-A338-4C3E-BC1D-58DFB635930D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "src\WebApp\WebApp.csproj", "{62406CC7-46D6-446A-A7D7-847E67530A8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,11 +25,18 @@ Global
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62406CC7-46D6-446A-A7D7-847E67530A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62406CC7-46D6-446A-A7D7-847E67530A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62406CC7-46D6-446A-A7D7-847E67530A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62406CC7-46D6-446A-A7D7-847E67530A8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B9717248-4838-4922-B9DD-C9EF88F0B6A8}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{62406CC7-46D6-446A-A7D7-847E67530A8A} = {22D2302C-A338-4C3E-BC1D-58DFB635930D}
 	EndGlobalSection
 EndGlobal
