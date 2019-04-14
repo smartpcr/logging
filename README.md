@@ -1,7 +1,7 @@
 # Goals
 
 - Poc for logging/metrics
-- A simple .net core webapi following [generator]() that will inject the following features:
+- A simple .net core webapi following [generator](https://github.com/g0t4/aspnetcore-generator-api) that will inject the following features:
     - Prometheus
     - Serilog
     - Open tracing
@@ -39,8 +39,12 @@
     source code including tests
     - services 
         - Generator.Api
-        - Generator.Api.UnitTests: unit tests 
-        - Generator.Api.IntegrationTests: integration tests
+        - Generator.Api.UnitTests
+        - Generator.Api.IntegrationTests
+    - web 
+        - Generator.Web
+        - Generator.Web.UnitTests
+        - Generator.Web.IntegrationTests
 - charts
     helm charts 
 
