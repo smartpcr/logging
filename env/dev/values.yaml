@@ -10,6 +10,3 @@ aks:
     aksDnsPrefix: hw-aks-xd
     aksOwnerAadUpn: xiaodoli.onmicrosoft.com
     purpose: devspace
-helm:
-    helmStorageAccountName: oneeshelm
-    helmBlobContainerName: helm

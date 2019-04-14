@@ -1,0 +1,32 @@
+global:
+  network: {{ .Values.dockerNetwork }}
+  sharedDrive: "C:\\share"
+  installPrometheus: true
+  installTelegraf: false
+  installInfluxDb: false
+  installGrafana: true 
+  installFluentd: false 
+  installChronograf: false 
+influxDb:
+  sharedFolder: influxdb
+  maxSize: 200m
+  port: 8086
+telegraf: 
+  sharedFolder: telegraf 
+chronograf:
+  port: 8881
+  influxDbUrl: "http://influxdb:8086"
+grafana:
+  port: 3000 
+  influxDb: 
+    database: grafana 
+    user: grafana
+    pwd: grafana 
+fluentd:
+  port: 24224
+  udpPort: 24224 
+  sharedFolder: fluentd 
+prometheus:
+  port: 9090
+  sharedFolder: prometheus 
+  

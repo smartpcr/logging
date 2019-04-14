@@ -1,4 +1,7 @@
-param([string] $EnvName = "dev")
+param(
+    [string] $EnvName = "dev",
+    [string] $SpaceName = "xd"
+)
 
 $gitRootFolder = if ($PSScriptRoot) { $PSScriptRoot } else { Get-Location }
 while (-not (Test-Path (Join-Path $gitRootFolder ".git"))) {
@@ -9,7 +12,7 @@ if (-not (Test-Path $scriptFolder)) {
     throw "Invalid script folder '$scriptFolder'"
 }
 
-$envRootFolder = Join-Path $scriptFolder "Env"
+$envRootFolder = Join-Path $gitRootFolder "Env"
 $moduleFolder = Join-Path $scriptFolder "modules"
 Import-Module (Join-Path $moduleFolder "common2.psm1") -Force
 Import-Module (Join-Path $moduleFolder "CertUtil.psm1") -Force
@@ -21,7 +24,7 @@ LogTitle -Message "Setting up App Insights for environment '$EnvName'..."
 
 
 LogStep -Step 1 -Message "Login and retrieve env settings..."
-$bootstrapValues = Get-EnvironmentSettings -EnvName $envName -EnvRootFolder $envRootFolder
+$bootstrapValues = Get-EnvironmentSettings -EnvName $envName -EnvRootFolder $envRootFolder -SpaceName $SpaceName
 LoginAzureAsUser2 -SubscriptionName $bootstrapValues.global.subscriptionName | Out-Null
 
 & $scriptFolder\Setup-ServicePrincipal2.ps1 -EnvName $EnvName 

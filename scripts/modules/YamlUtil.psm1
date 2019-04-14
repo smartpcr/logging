@@ -14,6 +14,7 @@ Import-Module "$scriptFolder\Modules\powershell-yaml\powershell-yaml.psm1" -Forc
 function Get-EnvironmentSettings {
     param(
         [string] $EnvName = "dev",
+        [string] $SpaceName = "xd",
         [string] $EnvRootFolder
     )
     
@@ -24,6 +25,15 @@ function Get-EnvironmentSettings {
         if (Test-Path $envValueYamlFile) {
             $envValues = Get-Content $envValueYamlFile -Raw | ConvertFrom-Yaml2
             Copy-YamlObject -fromObj $envValues -toObj $valuesOverride
+        }
+
+        if ($SpaceName) {
+            $spaceFolder = Join-Path $envFolder $SpaceName 
+            $spaceValueYamlFile = Join-Path $spaceFolder "values.yaml"
+            if (Test-Path $spaceValueYamlFile) {
+                $spaceValues = Get-Content $spaceValueYamlFile -Raw | ConvertFrom-Yaml2
+                Copy-YamlObject -fromObj $spaceValues -toObj $valuesOverride
+            }
         }
     }
 

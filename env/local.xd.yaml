@@ -1,0 +1,6 @@
+global:
+  network: xd
+  sharedDrive: "E:\\share"
+  installPrometheus: true
+  installGrafana: true 
+  installFluentd: true 
