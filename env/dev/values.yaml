@@ -1,0 +1,15 @@
+global:
+    owner: xd
+    envName: dev
+    subscriptionName: Compliance_Tools_Eng
+    tenantId: 72f988bf-86f1-41af-91ab-2d7cd011db47
+    subscriptionAlias: onees
+acr:
+    email: xiaodoli@microsoft.com
+aks:
+    aksDnsPrefix: hw-aks-xd
+    aksOwnerAadUpn: xiaodoli.onmicrosoft.com
+    purpose: devspace
+helm:
+    helmStorageAccountName: oneeshelm
+    helmBlobContainerName: helm

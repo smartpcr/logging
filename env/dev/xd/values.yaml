@@ -1,18 +1,27 @@
-# global 
-owner: xd
-envName: dev
-subscriptionName: RRD MSDN Ultimate
-subscriptionAlias: rrdult
-
-# acr
-acrOwnerEmail: xiaodoli@microsoft.com
-
-# aks
-aksDnsPrefix: hw-aks-xd
-
-# helm repo
-helmStorageAccountName: rrdhelm
-helmBlobContainerName: helm
-
-# description: not used in provision
-purpose: istio
+global:
+    owner: xd
+    envName: dev
+    productName: "azds"
+    productShortName: "azuredevspace"
+    subscriptionName: RRD MSDN Premium
+    tenantId: f7215caf-efd9-4bac-89c5-a3cf109a9f18
+    subscriptionAlias: rrdp
+    resourceGroup: "azds-dev-rg"
+kv:
+    resourceGroup: "azds-dev-rg"
+acr:
+    email: lingxd@gmail.com
+    resourceGroup: "azds-dev-rg"
+aks:
+    aksDnsPrefix: hw-aks-xd
+    aksOwnerAadUpn: lingxd@gmail.com
+    purpose: devspace
+    clusterName: "azds-k8s-dev" 
+    resourceGroup: "azds-dev-rg"
+helm:
+    helmStorageAccountName: oneeshelm
+    helmBlobContainerName: helm
+terraform:
+    resourceGroup: "azds-dev-rg"
+appInsights:
+    resourceGroup: "azds-dev-rg"
