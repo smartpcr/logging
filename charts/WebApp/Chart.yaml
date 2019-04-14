@@ -1,0 +1,7 @@
+name: WebApp
+home: https://github.com/smartpcr/logging/tree/master/src/WebApp 
+version: 1.0
+description: sample web app 
+maintainers:
+  - name: xiaodong li
+    email: lingxd@gmail.com 

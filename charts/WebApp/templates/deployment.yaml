@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{.Values.deploy.name}}"
+spec:
+  replicas: {{ default 1 .Values.deploy.replicas }}
+  selector:
+    matchLabels:
+      app: WebApp
+    template:
+      metadata:
+        labels:
+          app: WebApp
+      spec:
+        containers:
+          - image: "{{.Values.deploy.acrServer}}/xiaodong/WebApp:{{.Values.deploy.imageTag}}"
+            imagePullPolicy: Always
+            name: WebApi
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "500m"
+              limits:
+                memory: "1024Mi"
+                cpu: "1000m"
+            env:
+              - name: CosmosDbAccount
+                valueFrom:
+                  secretKeyRef:
+                    name: cosmosDb
+                    key: account
+              - name: CosmosDbKey
+                valueFrom:
+                  secretKeyRef:
+                    name: cosmosDb
+                    key: key
+              - name: APPINSIGHTS_INSTRUMENTATIONKEY
+                valueFrom:
+                  secretKeyRef:
+                    name: appInsights
+                    key: instrumentationKey
+            ports:
+              - containerPort: {{.Values.deploy.containerPort}}
+                protocol: TCP
+            restartPolicy: Always
