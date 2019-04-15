@@ -8,7 +8,7 @@ $scriptFolder = Join-Path $gitRootFolder "Scripts"
 if (-not (Test-Path $scriptFolder)) {
     throw "Invalid script folder '$scriptFolder'"
 }
-$envFolder = Join-Path $scriptFolder "Env"
+$envFolder = Join-Path $gitRootFolder "Env"
 $moduleFolder = Join-Path $scriptFolder "modules"
 
 Import-Module (Join-Path $moduleFolder "YamlUtil.psm1") -Force

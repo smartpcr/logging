@@ -42,11 +42,10 @@ function EnsureSshCert {
         [string] $VaultName,
         [string] $CertName,
         [string] $EnvName,
-        [string] $ScriptFolder
+        [string] $EnvRootFolder
     )
 
-    $EnvFolder = Join-Path $ScriptFolder "Env"
-    $credentialFolder = Join-Path (Join-Path $EnvFolder "credential") $EnvName
+    $credentialFolder = Join-Path (Join-Path $EnvRootFolder "credential") $EnvName
     New-Item $credentialFolder -ItemType Directory -Force | Out-Null
     $certFile = Join-Path $credentialFolder $CertName
     $pubCertFile = "$certFile.pub"

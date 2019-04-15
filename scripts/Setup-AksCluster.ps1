@@ -52,7 +52,7 @@ EnsureSshCert `
     -VaultName $bootstrapValues.kv.name `
     -CertName $bootstrapValues.aks.ssh_private_key `
     -EnvName $EnvName `
-    -ScriptFolder $scriptFolder
+    -EnvRootFolder $envRootFolder
 $aksCertPublicKeyFile = Join-Path $envCredentialFolder "$($bootstrapValues.aks.ssh_private_key).pub"
 $sshKeyData = Get-Content $aksCertPublicKeyFile
 
