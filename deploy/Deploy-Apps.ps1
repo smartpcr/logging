@@ -27,8 +27,8 @@ $bootstrapValues = Get-EnvironmentSettings -EnvName $envName -EnvRootFolder $env
 LoginAzureAsUser2 -SubscriptionName $bootstrapValues.global.subscriptionName | Out-Null
 
 if ($IsLocal) {
-    & "$scriptFolder\Bootstrap-DockerContainers.ps1 -EnvName $EnvName"
+    & "$scriptFolder\Deploy-AppsInDocker.ps1 -EnvName $EnvName"
 }
 else {
-    & "$scriptFolder\Bootstrap-AKS.ps1 -EnvName $EnvName -SpaceName $SpaceName"
+    & "$scriptFolder\Deploy-AppsInCluster.ps1 -EnvName $EnvName -SpaceName $SpaceName"
 }

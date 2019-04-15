@@ -8,6 +8,7 @@ namespace Generator.Api
     using Microsoft.AspNetCore.Rewrite;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Prometheus;
     using Swashbuckle.AspNetCore.Swagger;
 
     public class Startup
@@ -34,6 +35,19 @@ namespace Generator.Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // prometheus
+            var counter = Metrics.CreateCounter("CallRate", "Counts request to each api endpoint", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((context, next) =>
+            {
+                counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+                return next();
+            });
+            app.UseMetricServer();
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -41,11 +55,11 @@ namespace Generator.Api
             else
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseHealthChecks("/status");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
 
             // swagger options

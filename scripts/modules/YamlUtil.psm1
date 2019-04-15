@@ -65,6 +65,12 @@ function Copy-YamlObject {
         [object] $toObj
     )
     
+    # handles array assignment
+    if ($fromObj.GetType().IsGenericType -and $toObj.GetType().IsGenericType) {
+        $toObj = $fromObj
+        return 
+    }
+
     $fromObj.Keys | ForEach-Object {
         $name = $_ 
         $value = $fromObj.Item($name)
