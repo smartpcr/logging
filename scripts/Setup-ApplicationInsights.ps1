@@ -9,7 +9,7 @@ if (-not (Test-Path $scriptFolder)) {
     throw "Invalid script folder '$scriptFolder'"
 }
 
-$envRootFolder = Join-Path $scriptFolder "Env"
+$envRootFolder = Join-Path $gitRootFolder "Env"
 $templateFolder = Join-Path $envRootFolder "templates"
 $moduleFolder = Join-Path $scriptFolder "modules"
 Import-Module (Join-Path $moduleFolder "common2.psm1") -Force
