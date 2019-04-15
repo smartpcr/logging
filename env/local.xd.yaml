@@ -1,0 +1,10 @@
+global:
+  network: xd
+  sharedDrive: "E:\\share"
+  bootstrap:
+    installPrometheus: true
+    installGrafana: true 
+    installFluentd: true 
+    installTelegraf: true
+  apps:
+  - Generator.Api

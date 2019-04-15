@@ -1,9 +1,12 @@
-productName: helloworld
-productShortName: hw
-envName: dev
-owner: 1es
-location: westus2
-loc: wus2
-aksDnsPrefix: hw-aks
-email: 1es@microsoft.com
-adminUsername: azureuser
+global:
+    productName: "instrumentation"
+    productShortName: "log"
+    envName: "dev"
+    owner: "xd"
+    location: "westus2"
+    loc: "wus2"
+acr:
+    email: "1es@microsoft.com"
+aks:
+    aksDnsPrefix: "hw-aks"
+    adminUsername: "azureuser"

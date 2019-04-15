@@ -1,0 +1,52 @@
+global:
+  network: {{ .Values.dockerNetwork }}
+  sharedDrive: "C:\\share"
+  bootstrap:
+    installPrometheus: true
+    installTelegraf: false
+    installInfluxDb: false
+    installGrafana: true 
+    installFluentd: false 
+    installChronograf: false 
+  apps:
+    - generatorApi
+    - generatorWeb
+influxDb:
+  image: influxdb
+  sharedFolder: influxdb
+  maxSize: 200m
+  port: 8086
+telegraf: 
+  image: telegraf
+  sharedFolder: telegraf 
+chronograf:
+  image: chronograf
+  port: 8881
+  influxDbUrl: "http://influxdb:8086"
+grafana:
+  image: grafana/grafana
+  port: 3000 
+  influxDb: 
+    database: grafana 
+    user: grafana
+    pwd: grafana 
+fluentd:
+  image: fluent/fluentd
+  port: 24224
+  udpPort: 24224 
+  sharedFolder: fluentd 
+prometheus:
+  installMethod: choco
+  image: prom/prometheus
+  port: 9090
+  sharedFolder: prometheus 
+  exporters:
+    node_exporter:
+      port: 9100
+      image: prom/node-exporter
+generatorApi:
+  image:
+    name: generator-api 
+    tag: "1.0"
+  port: 5000
+  dockerFile: "src/services/Generator.Api/Dockerfile"
