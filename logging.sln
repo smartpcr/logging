@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "src\web\Web.csproj",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Metrics.Reporting.Socket", "src\App.Metrics.Reporting.Socket\App.Metrics.Reporting.Socket.csproj", "{F3997A11-5350-4469-9523-EC23C6DAB8DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sink.Fluentd", "src\Serilog.Sink.Fluentd\Serilog.Sink.Fluentd.csproj", "{5B23CE46-2597-4D61-9DB5-7A63C1346A47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B23CE46-2597-4D61-9DB5-7A63C1346A47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B23CE46-2597-4D61-9DB5-7A63C1346A47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B23CE46-2597-4D61-9DB5-7A63C1346A47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B23CE46-2597-4D61-9DB5-7A63C1346A47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

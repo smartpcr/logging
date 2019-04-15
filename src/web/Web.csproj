@@ -15,11 +15,11 @@
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.Fluentd" Version="0.2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\App.Metrics.Reporting.Socket\App.Metrics.Reporting.Socket.csproj" />
+    <ProjectReference Include="..\Serilog.Sink.Fluentd\Serilog.Sink.Fluentd.csproj" />
   </ItemGroup>
 
 </Project>

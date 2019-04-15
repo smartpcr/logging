@@ -1,0 +1,335 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-conf
+  namespace: default
+data:
+  fluentd-api.conf: |
+    ### This file offers the TCP endpoint used by the telemetry libraries. It assumes all records are tagged with fluentd.**
+
+    # Open TCP port for the 'forward' protocol
+    <source>
+      @type forward
+      port 24224
+      bind 0.0.0.0
+    </source>
+
+    # Supplement records coming in from the fluentd API
+    <filter fluentd.**>
+      @type record_transformer
+      enable_ruby
+      <record>
+        SOURCE                   "fluentd"
+        env_cloud_name           "onees-experiment"
+        env_cloud_deploymentUnit "int-disco-east-us"
+        env_cloud_location       "eastus"
+        env_cloud_role           "OneesDiscoInt"
+      </record>
+    </filter>
+  fluentd-container-logs.conf: |
+    ### This file collects and filters all Kubernetes container logs.
+
+    <source>
+      @type tail
+      path /var/log/containers/*.log
+      pos_file /var/log/fluentd-containers.log.pos
+      time_format %Y-%m-%dT%H:%M:%S.%NZ
+      tag kubernetes.*
+      format json
+      read_from_head true
+    </source>
+
+    <filter kubernetes.**>
+      @type kubernetes_metadata
+    </filter>
+
+    # Exclude events from Geneva containers since they just seem to echo events from other containers
+    <filter kubernetes.var.log.containers.geneva**.log>
+      @type grep
+      <exclude>
+        key log
+        pattern .*
+      </exclude>
+    </filter>
+
+    # Flatten the records and remove unnecessary fields
+    <filter kubernetes.var.log.containers.**.log>
+      @type record_transformer
+      enable_ruby
+      <record>
+        ContainerName ${record["kubernetes"]["container_name"]}
+        NamespaceName ${record["kubernetes"]["namespace_name"]}
+        PodName ${record["kubernetes"]["pod_name"]}
+        Node ${record["kubernetes"]["host"]}
+        MasterUrl ${record["kubernetes"]["master_url"]}
+      </record>
+      remove_keys docker,kubernetes,stream
+    </filter>
+
+    # Rewrite the tag of everything coming from Kubernetes container logs so that it's "k8scontainers.ContainerName"
+    <match kubernetes.var.log.containers.**.log>
+      @type rewrite_tag_filter
+      <rule>
+        key     ContainerName
+        pattern ^(.+)$
+        tag     k8scontainers.$1
+      </rule>
+    </match>
+  fluentd-systemd.conf: |
+    ### This file collects journald logs for the Kubernetes services running on the node.
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "kubelet.service" }]
+      <storage>
+        @type local
+        persistent false
+        path kubelet.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.kubelet
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "kube-proxy.service" }]
+      <storage>
+        @type local
+        persistent false
+        path kube-proxy.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.kube-proxy
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "kube-apiserver.service" }]
+      <storage>
+        @type local
+        persistent false
+        path kube-apiserver.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.kube-apiserver
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "kube-scheduler.service" }]
+      <storage>
+        @type local
+        persistent false
+        path kube-scheduler.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.kube-scheduler
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "kube-controller-manager.service" }]
+      <storage>
+        @type local
+        persistent false
+        path kube-controller-manager.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.kube-controller-manager
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "docker.service" }]
+      <storage>
+        @type local
+        persistent false
+        path docker.pos
+      </storage>
+      <entry>
+        field_map {"PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.docker
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "etcd.service" }]
+      <storage>
+        @type local
+        persistent false
+        path etcd.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.etcd
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "rescheduler.service" }]
+      <storage>
+        @type local
+        persistent false
+        path rescheduler.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.rescheduler
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "glbc.service" }]
+      <storage>
+        @type local
+        persistent false
+        path glbc.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.glbc
+    </source>
+
+    <source>
+      @type systemd
+      path /run/log/journal
+      filters [{ "_SYSTEMD_UNIT": "cluster-autoscaler.service" }]
+      <storage>
+        @type local
+        persistent false
+        path cluster-autoscaler.pos
+      </storage>
+      <entry>
+        field_map {"SYSLOG_FACILITY": "Facility", "PRIORITY": "Severity", "_HOSTNAME": "Node", "MESSAGE": "Msg", "_PID": "ProcessId", "SYSLOG_IDENTIFIER": "ProcessName", "_CMDLINE": "Cmdline", "_MACHINE_ID": "MachineId", "_SYSTEMD_UNIT": "SystemdUnit"}
+        fields_strip_underscores true
+        fields_lowercase true
+        field_map_strict true
+      </entry>
+      read_from_head true
+      tag syslog.cluster-autoscaler
+    </source>
+  fluentd.conf: |
+    @include fluentd-systemd.conf
+    @include fluentd-container-logs.conf
+    @include fluentd-api.conf
+
+    # # Enable for easier debugging
+    # <filter **>
+    #   @type stdout
+    # </filter>
+
+    # Send all kubernetes container events to MDSD
+    <match k8scontainers.**>
+      @type mdsd
+      @log_level info
+      djsonsocket /var/run/mdsd/default_djson.socket  # Full path to mdsd dynamic json socket file
+      acktimeoutms 5000  # max time in milliseconds to wait for mdsd acknowledge response. If 0, no wait.
+      mdsd_tag_regex_patterns ["^k8scontainers"]  # fluentd tag patterns whose match will be used as mdsd source name
+      num_threads 1
+      buffer_chunk_limit 1000k
+      buffer_type file
+      buffer_path /var/log/td-agent/buffer/out_k8scontainers*.buffer
+      buffer_queue_limit 128
+      flush_interval 10s
+      retry_limit 3
+      retry_wait 10s
+    </match>
+
+    # Send all syslog events to MDSD
+    <match syslog.**>
+      @type mdsd
+      @log_level info
+      djsonsocket /var/run/mdsd/default_djson.socket  # Full path to mdsd dynamic json socket file
+      acktimeoutms 5000  # max time in milliseconds to wait for mdsd acknowledge response. If 0, no wait.
+      mdsd_tag_regex_patterns ["^syslog"]  # fluentd tag patterns whose match will be used as mdsd source name
+      num_threads 1
+      buffer_chunk_limit 1000k
+      buffer_type file
+      buffer_path /var/log/td-agent/buffer/out_syslog*.buffer
+      buffer_queue_limit 128
+      flush_interval 10s
+      retry_limit 3
+      retry_wait 10s
+    </match>
+
+    # Send all direct API calls to MDSD
+    <match fluentd.**>
+      @type mdsd
+      @log_level info
+      djsonsocket /var/run/mdsd/default_djson.socket  # Full path to mdsd dynamic json socket file
+      acktimeoutms 5000  # max time in milliseconds to wait for mdsd acknowledge response. If 0, no wait.
+      mdsd_tag_regex_patterns ["^fluentd"]  # fluentd tag patterns whose match will be used as mdsd source name
+      num_threads 1
+      buffer_chunk_limit 1000k
+      buffer_type file
+      buffer_path /var/log/td-agent/buffer/out_fluentd*.buffer
+      buffer_queue_limit 128
+      flush_interval 10s
+      retry_limit 3
+      retry_wait 10s
+    </match>
+
+    # Anything else goes to standard output
+    <match **>
+      @type stdout
+    </match>
+

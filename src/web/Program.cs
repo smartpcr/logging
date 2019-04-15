@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
-using Serilog.Sinks.Fluentd;
+using Serilog.Sink.Fluentd;
 
 namespace Web
 {

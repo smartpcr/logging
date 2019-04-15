@@ -45,8 +45,18 @@ docker run -d --name=grafana -p 3000:3000 --net=influxdb grafana/grafana
 
 
 Write-Host "Deploy fluentd on 24224..."
-New-Item -Path c:\fluentd -ItemType Directory | Out-Null
-docker run -d --name fluentd -p 24224:24224 -p 24224:24224/udp -v c:\fluentd:/fluentd/log:rw fluent/fluentd
+New-Item -Path c:\fluentd -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+docker stop fluentd 
+docker rm fluentd 
+docker run -d --name fluentd `
+    -p 24224:24224 -v c:\fluentd:/fluentd/log:rw `
+    fluent/fluentd
+
+docker run -d --name fluentd `
+    -p 24224:24224 -v c:\fluentd:/fluentd/log:rw `
+    -v C:\work\github\container\metrics\logging\deploy\infra\metric\fluentd\conf:/fluentd/etc `
+    -e FLUENTD_CONF=fluent.conf `
+    fluent/fluentd
 
 
 Write-Host "Deploy web on 8000..."
