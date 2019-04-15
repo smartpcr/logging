@@ -45,13 +45,17 @@ function Get-EnvironmentSettings {
     $targetProperties = GetProperties -subject $bootstrapValues
     $propertiesOverride | ForEach-Object {
         $propOverride = $_ 
+        $newValue = GetPropertyValue -subject $valuesOverride -propertyPath $propOverride
         $targetPropFound = $targetProperties | Where-Object { $_ -eq $propOverride }
         if ($targetPropFound) {
-            $newValue = GetPropertyValue -subject $valuesOverride -propertyPath $targetPropFound
             $existingValue = GetPropertyValue -subject $bootstrapValues -propertyPath $targetPropFound
             if ($null -ne $newValue -and $existingValue -ne $newValue) {
                 SetPropertyValue -targetObject $bootstrapValues -propertyPath $targetPropFound -propertyValue $newValue
             }
+        }
+        else {
+            Write-Host "`tAdding property '$propOverride' value '$newValue'..." -ForegroundColor White
+            SetPropertyValue -targetObject $bootstrapValues -propertyPath $propOverride -propertyValue $newValue
         }
     }
 
@@ -190,6 +194,12 @@ function GetProperties {
     )
 
     $props = New-Object System.Collections.ArrayList
+    
+    # handles array assignment
+    if ($subject.GetType().IsGenericType) {
+        return $props
+    }
+
     $subject.Keys | ForEach-Object {
         $currentPropName = $_ 
         $value = $subject[$currentPropName]

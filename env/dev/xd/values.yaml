@@ -18,9 +18,6 @@ aks:
     purpose: devspace
     clusterName: "azds-k8s-dev" 
     resourceGroup: "azds-dev-rg"
-helm:
-    helmStorageAccountName: oneeshelm
-    helmBlobContainerName: helm
 terraform:
     resourceGroup: "azds-dev-rg"
 appInsights:

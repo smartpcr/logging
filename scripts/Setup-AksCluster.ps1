@@ -8,7 +8,15 @@
         a) key vault
         b) resource group
 #>
-param([string] $EnvName = "dev")
+param(
+    [ValidateSet("dev", "int", "prod")]
+    [string] $EnvName = "dev",
+    [ValidateSet("xiaodong", "xd")]
+    [string] $SpaceName = "xd"
+)
+
+$ErrorActionPreference = "Stop"
+Set-StrictMode -Version Latest 
 
 $gitRootFolder = if ($PSScriptRoot) { $PSScriptRoot } else { Get-Location }
 while (-not (Test-Path (Join-Path $gitRootFolder ".git"))) {
@@ -177,21 +185,26 @@ az aks use-dev-spaces `
     --resource-group $bootstrapValues.aks.resourceGroup `
     --name $bootstrapValues.aks.clusterName | Out-Null 
 
-<# run the following block to switch to windows-based authentication, token expiration is much quicker 
-LogInfo -Message "reset kubernetes context..."
-az aks get-credentials --resource-group $bootstrapValues.aks.resourceGroup --name $bootstrapValues.aks.clusterName
-#>
-
-# az aks browse --resource-group $($bootstrapValues.aks.resourceGroup) --name $($bootstrapValues.aks.clusterName)
-if ($bootstrapValues.global.appInsights) {
+LogStep -Step 8 -Message "Create k8s secrets..."
+if ($bootstrapValues.aks.secrets.addAppInsightsKey) {
+    $appInsightsSetting = $bootstrapValues.secrets.appInsights
     $instrumentationKeySecret = az keyvault secret show --vault-name $bootstrapValues.kv.name --name $bootstrapValues.appInsights.instrumentationKeySecret | ConvertFrom-Json
-    $mongoDbKeySecret = az.cmd keyvault secret show --vault-name $bootstrapValues.kv.name --name $bootstrapValues.mongoDb.keySecret | ConvertFrom-Json
-    $mongoUser = $bootstrapValues.mongoDb.account
-    $mongoPwd = $mongoDbKeySecret.value
     $appInsightsKey = $instrumentationKeySecret.value
-    kubectl.exe create secret generic cosmos-db-secret `
-        --from-literal=user=$mongoUser `
-        --from-literal=pwd=$mongoPwd `
-        --from-literal=appinsights=$appInsightsKey `
-        -n $EnvName
+    $secretKey = $appInsightsSetting.key
+    $secretLiteral = "$($appInsightsSetting.name)=$($appInsightsKey)"
+    $secretNamespace = $appInsightsSetting.namespace
+    LogInfo -Message "Creating k8s secret '$secretKey' in namespace '$secretNamespace'..."
+    kubectl.exe create secret generic $appInsightsSetting.key `
+        --from-literal=$secretLiteral `
+        -n $secretNamespace
+}
+
+if ($bootstrapValues.aks.secrets.addKeyVaultAccess) {
+
+}
+
+LogStep -Step 9 -Message "Setup monitoring infrastructure..."
+if ($bootstrapValues.aks.monitoring.charts.installPrometheus) {
+    LogInfo "Setting up prometheus..."
+    & "$scriptFolder\Setup-AksCluster.ps1" -EnvName $EnvName -SpaceName $SpaceName
 }
