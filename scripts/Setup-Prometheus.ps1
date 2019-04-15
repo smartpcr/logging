@@ -33,3 +33,15 @@ if (-not (Test-Path $manifestFile)) {
     throw "Unable to find prometheus manifest file '$manifestFile'"
 }
 kubectl.exe apply -f $manifestFile
+
+Write-Host "Browse grafana dashboard..." -ForegroundColor Green
+$GrafanaPodName = $(kubectl get pods --namespace monitoring -l "app=grafana,component=core" -o jsonpath="{.items[0].metadata.name}")
+Start-Process powershell "kubectl port-forward --namespace monitoring $GrafanaPodName 3000:3000"
+
+Write-Host "Browse prometheus web ui..." -ForegroundColor Green
+$prometheusPodName=$(kubectl get pods --namespace monitoring -l "app=prometheus,component=core" -o jsonpath="{.items[0].metadata.name}")
+Start-Process powershell "kubectl  port-forward --namespace monitoring $prometheusPodName 9090"
+
+Write-Host "Browse alert manager web ui..." -ForegroundColor Green
+$alertManagerPodName=$(kubectl get pods --namespace monitoring -l "app=alertmanager" -o jsonpath="{.items[0].metadata.name}")
+Start-Process powershell "kubectl port-forward --namespace monitoring $alertManagerPodName 9093"
