@@ -79,3 +79,6 @@ Use serilog to collect trace messages
 The following sink will be supported:
 1. fluentd+elastic search+kabana
 
+# TODO
+1. track exception with `Application Insights` by injecting `IExceptionHandler`
+2. deploy `prometheus` to AKS using (this repo)[https://github.com/giantswarm/prometheus]
