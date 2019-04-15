@@ -7,7 +7,7 @@
     - Open tracing
     - App Insights
 - Deployments
-    1. bootstrap azure resources, including (currently it's using AZ cli, will consider migrate to terraform if that's simpler):
+    1. bootstrap azure resources
         - resource group 
         - container registry (helm)
         - service principals 
@@ -32,7 +32,9 @@
 
 # Solution layout
 - env 
-    infrastructure settings, specify resources to be provisioned within azure
+    infrastructure settings, specify resources to be provisioned within azure or local docker
+    - `env.yaml`: used together with targeting env and userspace to provision azure resources
+    - `local.yaml`: used together with `local.{userspaceName}.yaml` to set containers in docker
 - deploy
     PS scripts to deploy both infrastructure and applications
 - src 
