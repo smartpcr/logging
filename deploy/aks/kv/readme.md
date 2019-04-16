@@ -1,2 +1,1 @@
-- (artical)[https://mrdevops.io/introducing-azure-key-vault-to-kubernetes-931f82364354]
-- (code)[https://github.com/SparebankenVest/azure-key-vault-to-kubernetes]
+- todo: figure out how to use aad-pod-identity

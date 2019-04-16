@@ -184,6 +184,8 @@ LogInfo -Message "Enable devspaces on AKS cluster..."
 az aks use-dev-spaces `
     --resource-group $bootstrapValues.aks.resourceGroup `
     --name $bootstrapValues.aks.clusterName | Out-Null 
+LogInfo -Message "Map devspace to K8S namespace"
+kubectl.exe create namespace $SpaceName
 
 LogStep -Step 8 -Message "Create k8s secrets..."
 if ($bootstrapValues.aks.secrets.addAppInsightsKey) {
@@ -200,11 +202,22 @@ if ($bootstrapValues.aks.secrets.addAppInsightsKey) {
 }
 
 if ($bootstrapValues.aks.secrets.addKeyVaultAccess) {
+    $spnName = $bootstrapValues.aks.servicePrincipal
+    $sp = az ad sp list --display-name $spnName | ConvertFrom-Json
+    $vaultName = $bootstrapValues.kv.name
+    $spPwdSecretName = $bootstrapValues.aks.servicePrincipalPassword
+    $spnPwd = (az keyvault secret show --vault-name $vaultName --name $spPwdSecretName | ConvertFrom-Json).value 
+    $clientId = $sp.appId
+    $vaultUrl = "https://$vaultName.vault.azure.net/"
 
+    kubectl create configmap vault --from-literal=vault=$vaultName -n $SpaceName
+    kubectl create configmap kvuri --from-literal=kvuri=$vaultUrl -n $SpaceName
+    kubectl create configmap clientid --from-literal=clientId=$clientId -n $SpaceName
+    kubectl create secret generic clientsecret --from-literal=clientSecret=$spnPwd -n $SpaceName
 }
 
 LogStep -Step 9 -Message "Setup monitoring infrastructure..."
 if ($bootstrapValues.aks.monitoring.charts.installPrometheus) {
     LogInfo "Setting up prometheus..."
-    & "$scriptFolder\Setup-AksCluster.ps1" -EnvName $EnvName -SpaceName $SpaceName
+    & "$scriptFolder\Setup-Prometheus.ps1" -EnvName $EnvName -SpaceName $SpaceName
 }
