@@ -31,3 +31,11 @@ Invoke-Expression "$scriptFolder\ConnectTo-AksCluster -EnvName $EnvName -AsAdmin
 LogStep -Step 1 -Message "Login and retrieve aks spn pwd..."
 $bootstrapValues = Get-EnvironmentSettings -EnvName $envName -EnvRootFolder $envRootFolder
 $azAccount = LoginAzureAsUser2 -SubscriptionName $bootstrapValues.global.subscriptionName 
+
+LogStep -Step 2 -Message "Building docker image with tag ''..."
+
+LogStep -Step 3 -Message "Publishing docker image..."
+
+LogStep -Step 4 -Message "Updating chart values..."
+
+LogStep -Step 5 -Message "Deploy chart to K8S..."
