@@ -13,6 +13,12 @@ FROM build AS publish
 RUN dotnet publish "Generator.Api.csproj" -c Release -o /app
 
 FROM base AS final
+ARG client_id
+ENV client_id=${client_id}
+ARG vault_name
+ENV vault_name=${vault_name}
+ARG client_secret
+ENV client_secret=${client_secret}
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Generator.Api.dll"]

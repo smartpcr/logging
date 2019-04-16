@@ -10,6 +10,11 @@ function DeployApp {
     RemoveContainerByImageName -ImageName "$($imageName):$($imageTag)"
 
     $dockerFile = Join-Path $gitRootFolder $AppSetting.dockerFile
+
+    # check kv setting and inject secret as environment variables 
+    $dockerSettings = Get-Content $dockerFile -Raw | ConvertFrom-Yaml2
+    
+
     $dockerContext = [System.IO.Path]::GetDirectoryName($dockerFile)
     docker build -t "$($imageName):$($imageTag)" $dockerContext
     docker run -d --name $imageName -p "$($AppSetting.port):80" --net=$net "$($imageName):$($imageTag)"

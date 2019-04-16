@@ -9,8 +9,8 @@ global:
     installFluentd: false 
     installChronograf: false 
   apps:
-    - generatorApi
-    - generatorWeb
+    - generatorapi
+    - generatorweb
 influxDb:
   image: influxdb
   sharedFolder: influxdb
@@ -44,9 +44,10 @@ prometheus:
     node_exporter:
       port: 9100
       image: prom/node-exporter
-generatorApi:
+generatorapi:
   image:
-    name: generator-api 
+    name: generatorapi
     tag: "1.0"
   port: 5000
   dockerFile: "src/services/Generator.Api/Dockerfile"
+  useKeyVault: true

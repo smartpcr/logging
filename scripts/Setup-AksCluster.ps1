@@ -35,6 +35,7 @@ Import-Module (Join-Path $moduleFolder "common2.psm1") -Force
 Import-Module (Join-Path $moduleFolder "CertUtil.psm1") -Force
 Import-Module (Join-Path $moduleFolder "YamlUtil.psm1") -Force
 Import-Module (Join-Path $moduleFolder "VaultUtil.psm1") -Force
+Import-Module (Join-Path $moduleFolder "KubeUtil.psm1") -Force
 SetupGlobalEnvironmentVariables -ScriptFolder $scriptFolder
 LogTitle -Message "Setting up AKS cluster for environment '$EnvName'..."
 
@@ -193,12 +194,9 @@ if ($bootstrapValues.aks.secrets.addAppInsightsKey) {
     $instrumentationKeySecret = az keyvault secret show --vault-name $bootstrapValues.kv.name --name $bootstrapValues.appInsights.instrumentationKeySecret | ConvertFrom-Json
     $appInsightsKey = $instrumentationKeySecret.value
     $secretKey = $appInsightsSetting.key
-    $secretLiteral = "$($appInsightsSetting.name)=$($appInsightsKey)"
-    $secretNamespace = $appInsightsSetting.namespace
-    LogInfo -Message "Creating k8s secret '$secretKey' in namespace '$secretNamespace'..."
-    kubectl.exe create secret generic $appInsightsSetting.key `
-        --from-literal=$secretLiteral `
-        -n $secretNamespace
+    LogInfo -Message "Creating k8s secret '$secretKey' in namespace '$SpaceName'..."
+    
+    SetSecret -Key "$($appInsightsSetting.key)" -name "$($appInsightsSetting.name)" -Value $appInsightsKey -Namespace $SpaceName -ScriptFolder $scriptFolder
 }
 
 if ($bootstrapValues.aks.secrets.addKeyVaultAccess) {
@@ -210,10 +208,13 @@ if ($bootstrapValues.aks.secrets.addKeyVaultAccess) {
     $clientId = $sp.appId
     $vaultUrl = "https://$vaultName.vault.azure.net/"
 
-    kubectl create configmap vault --from-literal=vault=$vaultName -n $SpaceName
-    kubectl create configmap kvuri --from-literal=kvuri=$vaultUrl -n $SpaceName
-    kubectl create configmap clientid --from-literal=clientId=$clientId -n $SpaceName
-    kubectl create secret generic clientsecret --from-literal=clientSecret=$spnPwd -n $SpaceName
+    LogInfo -Message "Creating config map for key vault settings..."
+    SetConfigMap -Key "vault" -name "vault" -Value $vaultName -Namespace $SpaceName -ScriptFolder $scriptFolder
+    SetConfigMap -Key "kvuri" -name "kvuri" -Value $vaultUrl -Namespace $SpaceName -ScriptFolder $scriptFolder
+    SetConfigMap -Key "clientid" -name "clientid" -Value $clientId -Namespace $SpaceName -ScriptFolder $scriptFolder
+
+    LogInfo -Message "Create k8s secret for key vault access..."
+    SetSecret -Key "clientsecret" -name "clientsecret" -Value $spnPwd -Namespace $SpaceName -ScriptFolder $scriptFolder
 }
 
 LogStep -Step 9 -Message "Setup monitoring infrastructure..."

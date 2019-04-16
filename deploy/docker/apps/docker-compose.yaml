@@ -1,0 +1,11 @@
+# This file defines the core services used for docker-compose.
+# It also describes how those services are run by default.
+
+version: '3.3'
+
+services:
+  generatorapi:
+    image: "{{ .Values.acr.name }}.azurecr.io/generatorapi:{{ .Values.apps.generatorapi.imageTag }}"
+    
+  generatorweb:
+    image: "{{ .Values.acr.name }}.azurecr.io/generatorapi:{{ .Values.apps.generatorapi.imageTag }}"

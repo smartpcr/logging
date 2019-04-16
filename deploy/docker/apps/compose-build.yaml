@@ -1,0 +1,21 @@
+# This file defines how services are built into traditional Docker containers.
+
+version: '3.3'
+
+services:
+  generatorapi:
+    build:
+      context: "{{ .Values.git_root }}/src/services/Generator.Api"
+      args:
+        APP_NAME: "generatorapi"
+        CONFIGURATION: "Debug"
+        client_id: "{{ .Values.client_id }}"
+        vault_name: "{{ .Values.vault_name }}"
+        client_secret: "{{ .Values.client_secret }}"
+
+  generatorweb:
+    build:
+      context: "{{ .Values.git_root }}/src/web/Generator.Web"
+      args:
+        APP_NAME: "generatorweb"
+        CONFIGURATION: "Debug"
