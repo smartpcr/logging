@@ -13,7 +13,16 @@ function DeployApp {
     $imageTag = $AppSettings.image.tag
     RemoveContainerByImageName -ImageName "$($imageName):$($imageTag)"
 
+<<<<<<< HEAD
     $dockerFile = Join-Path $gitRootFolder $AppSettings.dockerFile
+=======
+    $dockerFile = Join-Path $gitRootFolder $AppSetting.dockerFile
+
+    # check kv setting and inject secret as environment variables 
+    $dockerSettings = Get-Content $dockerFile -Raw | ConvertFrom-Yaml2
+    
+
+>>>>>>> e1b928639bb91af6bbe1319d2b157ab765daabdb
     $dockerContext = [System.IO.Path]::GetDirectoryName($dockerFile)
     if ($AppSettings.useKeyVault) {
         docker build $dockerContext -t "$($imageName):$($imageTag)" --build-arg client_id=$kvSettings.client_id --build-arg client_secret=$kvSettings.client_secret --build-arg vault_name=$KVSettings.vault_name

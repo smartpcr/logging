@@ -153,12 +153,12 @@ function ReplaceValuesInYamlFile {
         $content = Get-Content $YamlFile 
     }
 
-    $pattern = "{{ .Values.$PlaceHolder }}"
+    $pattern = "\{\{\s*\.Values.$PlaceHolder\s*\}\}"
     $buffer = New-Object System.Text.StringBuilder
     $content | ForEach-Object {
         $line = $_ 
         if ($line) {
-            $line = $line.Replace($pattern, $Value)
+            $line = $line -replace $pattern, $Value
             $buffer.AppendLine($line) | Out-Null
         }
     }
