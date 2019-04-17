@@ -46,7 +46,8 @@ prometheus:
       image: prom/node-exporter
 generatorApi:
   image:
-    name: generator-api 
+    name: generatorapi 
     tag: "1.0"
   port: 5000
   dockerFile: "src/services/Generator.Api/Dockerfile"
+  useKeyVault: true 

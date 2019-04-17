@@ -1,20 +1,29 @@
 param(
+    [string] $EnvName = "dev",
     [string] $SpaceName = "xd"
 )
 
 function DeployApp {
-    param([object] $AppSetting)
+    param(
+        [object] $AppSettings,
+        [object] $KVSettings 
+    )
 
-    $imageName = $AppSetting.image.name
-    $imageTag = $AppSetting.image.tag
+    $imageName = $AppSettings.image.name
+    $imageTag = $AppSettings.image.tag
     RemoveContainerByImageName -ImageName "$($imageName):$($imageTag)"
 
-    $dockerFile = Join-Path $gitRootFolder $AppSetting.dockerFile
+    $dockerFile = Join-Path $gitRootFolder $AppSettings.dockerFile
     $dockerContext = [System.IO.Path]::GetDirectoryName($dockerFile)
-    docker build -t "$($imageName):$($imageTag)" $dockerContext
-    docker run -d --name $imageName -p "$($AppSetting.port):80" --net=$net "$($imageName):$($imageTag)"
-}
+    if ($AppSettings.useKeyVault) {
+        docker build $dockerContext -t "$($imageName):$($imageTag)" --build-arg client_id=$kvSettings.client_id --build-arg client_secret=$kvSettings.client_secret --build-arg vault_name=$KVSettings.vault_name
+    }
+    else {
+        docker build -t "$($imageName):$($imageTag)" $dockerContext 
+    }
 
+    docker run -d --name $imageName -p "$($AppSettings.port):80" --net=$net "$($imageName):$($imageTag)"
+}
 
 function RemoveContainerByImageName {
     param([string] $ImageName)
@@ -54,13 +63,21 @@ if ($SpaceName) {
     }
 }
 $net = $settings.global.network
+$bootstrapValues = Get-EnvironmentSettings -EnvName $envName -EnvRootFolder $envRootFolder -SpaceName $SpaceName
+$aksSpn = az ad sp list --display-name $bootstrapValues.aks.servicePrincipal | ConvertFrom-Json
+$servicePrincipalPwd = az keyvault secret show --vault-name $bootstrapValues.kv.name --name $bootstrapValues.aks.servicePrincipalPassword | ConvertFrom-Json
+$kvSettings = @{
+    vault_name = $bootstrapValues.kv.name
+    client_id  = $aksSpn.appId
+    client_secret = $servicePrincipalPwd.value
+}
 
 if ($settings.global.apps) {
     $settings.global.apps | ForEach-Object {
         $appName = $_ 
         if ($settings.ContainsKey($appName)) {
-            $appSetting = $settings[$appName]
-            DeployApp -AppSetting $appSetting
+            $appSettings = $settings[$appName]
+            DeployApp -AppSettings $appSettings -KVSettings $kvSettings
         }
         
     }
