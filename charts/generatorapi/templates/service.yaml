@@ -1,19 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "generatorapi.fullname" . }}
+  name: generatorapi
   labels:
-    app: {{ template "generatorapi.name" . }}
-    chart: {{ template "generatorapi.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    name: generatorapi
 spec:
-  type: {{ .Values.service.type }}
+  type: "{{.Values.service.type}}"
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+  - name: http
+    port: {{.Values.service.port}}
+    targetPort: {{.Values.service.port}}
   selector:
-    app: {{ template "generatorapi.name" . }}
-    release: {{ .Release.Name }}
+    app: generatorapi

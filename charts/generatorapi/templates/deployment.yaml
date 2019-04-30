@@ -1,72 +1,31 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "generatorapi.fullname" . }}
-  labels:
-    app: {{ template "generatorapi.name" . }}
-    chart: {{ template "generatorapi.chart" . }}
-    draft: {{ default "draft-app" .Values.draft }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  name: "{{.Values.deploy.name}}"
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: {{ template "generatorapi.name" . }}
-      release: {{ .Release.Name }}
+      app: generatorapi
   template:
     metadata:
       labels:
-        app: {{ template "generatorapi.name" . }}
-        draft: {{ default "draft-app" .Values.draft }}
-        release: {{ .Release.Name }}
-      annotations:
-        buildID: {{ .Values.buildID }}
+        app: generatorapi
     spec:
-      containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          {{- if .Values.probes.enabled }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          {{- end }}
-          env:
-            {{- $root := . }}
-            {{- range $ref, $values := .Values.secrets }}
-            {{- range $key, $value := $values }}
-            - name: {{ $ref }}_{{ $key }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "generatorapi.fullname" $root }}-{{ $ref | lower }}
-                  key: {{ $key }}
-            {{- end }}
-            {{- end }}
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+        - name: regcred
+      containers:
+        - image: "{{.Values.deploy.acrServer}}/hackfest/{{.Values.deploy.imageName}}:{{.Values.deploy.imageTag}}"
+          imagePullPolicy: Always
+          name: generatorapi
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "10m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+          - containerPort: {{.Values.deploy.containerPort}}
+            protocol: TCP
+      restartPolicy: Always
