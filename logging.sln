@@ -1,31 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "src\web\Web.csproj", "{42AAEF1C-7BC1-40DE-8488-DD1149699D2D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Metrics.Reporting.Socket", "src\App.Metrics.Reporting.Socket\App.Metrics.Reporting.Socket.csproj", "{F3997A11-5350-4469-9523-EC23C6DAB8DB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{22D2302C-A338-4C3E-BC1D-58DFB635930D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "src\WebApp\WebApp.csproj", "{62406CC7-46D6-446A-A7D7-847E67530A8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "src\WebApp\WebApp.csproj", "{62406CC7-46D6-446A-A7D7-847E67530A8A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{61FC4CCB-1946-4F1A-83D5-F4FC1E522865}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator.Api", "src\services\Generator.Api\Generator.Api.csproj", "{78870695-C021-4291-98A7-A5A883191B0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.Api", "src\services\Generator.Api\Generator.Api.csproj", "{78870695-C021-4291-98A7-A5A883191B0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator.Api.UnitTests", "src\services\Generator.Api.UnitTests\Generator.Api.UnitTests.csproj", "{435E7574-451E-4D48-B4F9-69BF746C66B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.Api.UnitTests", "src\services\Generator.Api.UnitTests\Generator.Api.UnitTests.csproj", "{435E7574-451E-4D48-B4F9-69BF746C66B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator.Api.IntegrationTests", "src\services\Generator.Api.IntegrationTests\Generator.Api.IntegrationTests.csproj", "{4C2F8AEF-48EF-45BA-91BF-B7E4A34E77A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.Api.IntegrationTests", "src\services\Generator.Api.IntegrationTests\Generator.Api.IntegrationTests.csproj", "{4C2F8AEF-48EF-45BA-91BF-B7E4A34E77A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{9B02DC74-04F3-4C8A-8201-8F81FEC5877F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator.Web", "src\web\Generator.Web\Generator.Web.csproj", "{DAAEACAD-BC13-45D5-A426-34F8F1C01E68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.Web", "src\web\Generator.Web\Generator.Web.csproj", "{DAAEACAD-BC13-45D5-A426-34F8F1C01E68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator.Web.IntegrationTests", "src\web\Generator.Web.IntegrationTests\Generator.Web.IntegrationTests.csproj", "{23C68BCB-C4C6-477B-A66E-545E27C4FF3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.Web.IntegrationTests", "src\web\Generator.Web.IntegrationTests\Generator.Web.IntegrationTests.csproj", "{23C68BCB-C4C6-477B-A66E-545E27C4FF3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator.Web.UnitTests", "src\web\Generator.Web.UnitTests\Generator.Web.UnitTests.csproj", "{E515BAED-A82D-4DD4-BAF0-BE04BE8794CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.Web.UnitTests", "src\web\Generator.Web.UnitTests\Generator.Web.UnitTests.csproj", "{E515BAED-A82D-4DD4-BAF0-BE04BE8794CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{42AAEF1C-7BC1-40DE-8488-DD1149699D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42AAEF1C-7BC1-40DE-8488-DD1149699D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42AAEF1C-7BC1-40DE-8488-DD1149699D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42AAEF1C-7BC1-40DE-8488-DD1149699D2D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3997A11-5350-4469-9523-EC23C6DAB8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -73,9 +67,6 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B9717248-4838-4922-B9DD-C9EF88F0B6A8}
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{62406CC7-46D6-446A-A7D7-847E67530A8A} = {22D2302C-A338-4C3E-BC1D-58DFB635930D}
 		{61FC4CCB-1946-4F1A-83D5-F4FC1E522865} = {22D2302C-A338-4C3E-BC1D-58DFB635930D}
@@ -86,5 +77,8 @@ Global
 		{DAAEACAD-BC13-45D5-A426-34F8F1C01E68} = {9B02DC74-04F3-4C8A-8201-8F81FEC5877F}
 		{23C68BCB-C4C6-477B-A66E-545E27C4FF3E} = {9B02DC74-04F3-4C8A-8201-8F81FEC5877F}
 		{E515BAED-A82D-4DD4-BAF0-BE04BE8794CF} = {9B02DC74-04F3-4C8A-8201-8F81FEC5877F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B9717248-4838-4922-B9DD-C9EF88F0B6A8}
 	EndGlobalSection
 EndGlobal
